@@ -60,17 +60,15 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        toast.error(data.error || "Login failed");
+        toast.error(data.message || "Login failed");
         return;
       }
 
-      // Store token (you can use cookies or localStorage)
-      localStorage.setItem("token", data.token);
       toast.success("Logged in successfully!");
 
-      // Redirect based on role or to dashboard
-      router.push("/dashboard"); // or /admin, /student, etc.
-      router.refresh(); // to update server components if needed
+      // Redirect to dashboard
+      router.push("/dashboard");
+      router.refresh(); 
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     } finally {
