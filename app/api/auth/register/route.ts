@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import connectDB from "@/lib/db";
+import User from "@/lib/models/User";
+import UserProfile from "@/lib/models/UserProfile";
 import bcrypt from "bcryptjs";
 
 export async function POST(req: Request) {
   try {
+    await connectDB();
     const body = await req.json();
     const { email, password, name, phone, gender } = body;
 
@@ -16,28 +19,26 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Invalid gender" }, { status: 400 });
     }
 
-    const existingUser = await prisma.user.findUnique({ where: { email } });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json({ message: "User already exists" }, { status: 409 });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        roles: ["STUDENT"],
-        profile: {
-          create: {
-            name,
-            phone,
-            gender,
-            status: "ACTIVE",
-            admissionDate: new Date(),
-          },
-        },
-      },
+    const user = await User.create({
+      email,
+      password: hashedPassword,
+      roles: ["STUDENT"],
+    });
+
+    await UserProfile.create({
+      user: user._id,
+      name,
+      phone,
+      gender,
+      status: "ACTIVE",
+      admissionDate: new Date(),
     });
 
     return NextResponse.json(user, { status: 201 });
