@@ -14,3 +14,16 @@ export async function POST(req: Request) {
 
   return NextResponse.json(review, { status: 201 });
 }
+
+export async function GET() {
+  const reviews = await prisma.review.findMany({
+    include: {
+      profile: {
+        select: { name: true, profilePhoto: true },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return NextResponse.json(reviews);
+}
