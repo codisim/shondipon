@@ -1,10 +1,10 @@
 generator client {
-    provider = "prisma-client-js"
-    output   = "../generated"
+  provider = "prisma-client-js"
+  output   = "../generated"
 }
 
 datasource db {
-    provider = "mongodb"
+  provider = "mongodb"
 }
 
 // ======== models ========
@@ -27,16 +27,16 @@ model User {
 }
 
 model UserProfile {
-  id            String     @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  phone         String
-  profilePhoto  String?
-  address       String?
-  gender        Gender
+  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  phone        String
+  profilePhoto String?
+  address      String?
+  gender       Gender
 
   // ===== Teacher / Admin fields =====
-  designation   String?
-  experience    Int?
+  designation String?
+  experience  Int?
 
   // ===== Student fields =====
   admissionNo   String?
@@ -57,8 +57,6 @@ model UserProfile {
   @@map("user_profiles")
 }
 
-
-
 model Notice {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
   title       String
@@ -73,8 +71,6 @@ model Notice {
   @@map("notices")
 }
 
-
-
 model Payment {
   id     String        @id @default(auto()) @map("_id") @db.ObjectId
   month  String
@@ -82,14 +78,13 @@ model Payment {
   status PaymentStatus
   paidAt DateTime?
 
-  profileId String       @db.ObjectId
+  profileId String      @db.ObjectId
   profile   UserProfile @relation(fields: [profileId], references: [id])
 
   createdAt DateTime @default(now())
 
   @@map("payments")
 }
-
 
 model Review {
   id      String @id @default(auto()) @map("_id") @db.ObjectId
@@ -103,8 +98,6 @@ model Review {
 
   @@map("reviews")
 }
-
-
 
 ///////// enums /////
 
