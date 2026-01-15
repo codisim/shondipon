@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 import { ThemeProvider } from "@/providers/theme-provider";
 import { ActiveThemeProvider } from "@/components/active-theme";
@@ -54,6 +55,7 @@ export default async function RootLayout({
         >
           <ActiveThemeProvider initialTheme={activeThemeValue}>
             {children}
+            <Toaster position="top-left" />
           </ActiveThemeProvider>
         </ThemeProvider>
       </body>

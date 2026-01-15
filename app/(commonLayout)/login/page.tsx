@@ -50,14 +50,23 @@ export default function LoginPage() {
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
 
+    console.log("data", values);
+
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
 
       const data = await res.json();
+
+      console.log("res data", data);
 
       if (!res.ok) {
         toast.error(data.message || "Login failed");
@@ -68,7 +77,7 @@ export default function LoginPage() {
 
       // Redirect to dashboard
       router.push("/dashboard");
-      router.refresh(); 
+      router.refresh();
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -121,7 +130,11 @@ export default function LoginPage() {
                 )}
               />
 
-              <Button type="submit" className="w-full cursor-pointer" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full cursor-pointer"
+                disabled={isLoading}
+              >
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>

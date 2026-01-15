@@ -57,10 +57,9 @@ export default function RegisterPage() {
   
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
-    console.log("data", values);
     
     try {
-      const res = await fetch(`http://localhost:3000/api/auth/register`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json"
@@ -69,8 +68,6 @@ export default function RegisterPage() {
       });
 
       const data = await res.json();
-
-      console.log("data", data);
 
       if (!res.ok) {
         toast.error(data.error || "Registration failed");
