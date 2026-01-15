@@ -2,26 +2,17 @@
 
 import * as React from "react"
 import {
-  IconCamera,
   IconChartBar,
   IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
+  IconSchool,
   IconUsers,
+  IconUser,
+  IconCash,
+  IconBell,
+  IconInnerShadowTop,
 } from "@tabler/icons-react"
 
-import { NavDocuments } from "@/components/nav-documents"
 import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -33,124 +24,112 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: IconDashboard,
-    },
-    {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: IconChartBar,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
-  ],
+// This would ideally come from a context or prop, but for now we'll simulate or fetch
+// Since AppSidebar is a client component, we might need to pass data from the layout or page
+// For this refactor, I'll assume we pass user info as props or use a hook if available.
+// However, the existing usage in page.tsx is <AppSidebar variant="inset" /> without props.
+// I will update it to accept user info.
+
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user?: {
+    name: string;
+    email: string;
+    avatar: string;
+    roles: string[];
+  };
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
+  // Default user if not provided (fallback)
+  const currentUser = user || {
+    name: "Guest",
+    email: "guest@example.com",
+    avatar: "",
+    roles: [],
+  };
+
+  const isAdmin = currentUser.roles.includes("ADMIN");
+  const isTeacher = currentUser.roles.includes("TEACHER");
+  const isStudent = currentUser.roles.includes("STUDENT");
+
+  const navMain = [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: IconDashboard,
+      isActive: true,
+    },
+  ];
+
+  if (isAdmin) {
+    navMain.push(
+      {
+        title: "Users",
+        url: "/dashboard/users",
+        icon: IconUsers,
+        isActive: false,
+      },
+      {
+        title: "Students",
+        url: "/dashboard/students",
+        icon: IconSchool,
+        isActive: false,
+      },
+      {
+        title: "Teachers",
+        url: "/dashboard/teachers",
+        icon: IconUser,
+        isActive: false,
+      },
+      {
+        title: "Payments",
+        url: "/dashboard/payments",
+        icon: IconCash,
+        isActive: false,
+      },
+      {
+        title: "Notices",
+        url: "/dashboard/notices",
+        icon: IconBell,
+        isActive: false,
+      }
+    );
+  }
+
+  if (isTeacher && !isAdmin) {
+    navMain.push(
+      {
+        title: "My Students",
+        url: "/dashboard/my-students",
+        icon: IconUsers,
+        isActive: false,
+      },
+      {
+        title: "Notices",
+        url: "/dashboard/notices",
+        icon: IconBell,
+        isActive: false,
+      }
+    );
+  }
+
+  if (isStudent && !isAdmin && !isTeacher) {
+    navMain.push(
+      {
+        title: "My Payments",
+        url: "/dashboard/my-payments",
+        icon: IconCash,
+        isActive: false,
+      },
+      {
+        title: "Notices",
+        url: "/dashboard/notices",
+        icon: IconBell,
+        isActive: false,
+      }
+    );
+  }
+
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -160,21 +139,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <a href="/dashboard">
                 <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <span className="text-base font-semibold">Shondipon</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={navMain} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={currentUser} />
       </SidebarFooter>
     </Sidebar>
   )
