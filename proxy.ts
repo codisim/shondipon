@@ -4,7 +4,7 @@ import { jwtVerify } from "jose";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-this";
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;
 
@@ -63,3 +63,12 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|public).*)",
   ],
 };
+
+
+
+// register and login are not working from ui pages. 
+// ==== 
+// const res = await fetch("/api/auth/register",
+//  const res = await fetch("/api/auth/login"
+// ========
+
