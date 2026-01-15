@@ -25,7 +25,7 @@ const UserProfileSchema: Schema<IUserProfile> = new Schema(
     phone: { type: String, required: true },
     profilePhoto: { type: String },
     address: { type: String },
-    gender: { type: String, enum: ["MALE", "FEMALE"], required: true },
+    gender: { type: String, enum: ["MALE", "FEMALE"] },
     designation: { type: String },
     experience: { type: Number },
     admissionNo: { type: String },

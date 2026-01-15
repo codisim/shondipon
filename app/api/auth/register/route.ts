@@ -8,15 +8,10 @@ export async function POST(req: Request) {
   try {
     await connectDB();
     const body = await req.json();
-    const { email, password, name, phone, gender } = body;
+    const { email, password, name, phone } = body;
 
-    if (!email || !password || !name || !phone || !gender) {
+    if (!email || !password || !name || !phone) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
-    }
-
-    const validGenders = ["MALE", "FEMALE"];
-    if (!validGenders.includes(gender)) {
-      return NextResponse.json({ message: "Invalid gender" }, { status: 400 });
     }
 
     const existingUser = await User.findOne({ email });
@@ -36,7 +31,6 @@ export async function POST(req: Request) {
       user: user._id,
       name,
       phone,
-      gender,
       status: "ACTIVE",
       admissionDate: new Date(),
     });

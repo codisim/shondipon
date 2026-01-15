@@ -34,7 +34,7 @@ const formSchema = z.object({
     .string()
     .min(6, { message: "Password must be at least 6 characters" }),
   role: z.enum(["ADMIN", "TEACHER", "STUDENT"]),
-  phone: z.string().min(10, { message: "Phone number is required" }).optional(),
+  phone: z.string().min(10, { message: "Phone number is required" }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -54,17 +54,23 @@ export default function RegisterPage() {
     },
   });
 
+  
   async function onSubmit(values: FormValues) {
     setIsLoading(true);
-
+    console.log("data", values);
+    
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch(`http://localhost:3000/api/auth/register`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json"
+         },
         body: JSON.stringify(values),
       });
 
       const data = await res.json();
+
+      console.log("data", data);
 
       if (!res.ok) {
         toast.error(data.error || "Registration failed");
