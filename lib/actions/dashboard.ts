@@ -13,6 +13,7 @@ export async function getAdminStats() {
   const totalUsers = await User.countDocuments({ isDeleted: false });
   const totalStudents = await User.countDocuments({ roles: "STUDENT", isDeleted: false });
   const totalTeachers = await User.countDocuments({ roles: "TEACHER", isDeleted: false });
+  const totalReviews = await import("@/lib/models/Review").then(mod => mod.default.countDocuments());
 
   // Calculate total revenue (sum of all PAID payments)
   const totalRevenueResult = await Payment.aggregate([
@@ -20,6 +21,11 @@ export async function getAdminStats() {
     { $group: { _id: null, total: { $sum: "$amount" } } },
   ]);
   const totalRevenue = totalRevenueResult[0]?.total || 0;
+
+  // Gender Distribution (from UserProfile)
+  const genderDistribution = await UserProfile.aggregate([
+    { $group: { _id: "$gender", count: { $sum: 1 } } }
+  ]);
 
   // Recent payments
   const recentPayments = await Payment.find()
@@ -38,9 +44,6 @@ export async function getAdminStats() {
     const start = startOfMonth(date);
     const end = endOfMonth(date);
     
-    // We can match by 'month' string if it's stored consistently, or by createdAt/paidAt
-    // Assuming 'paidAt' is the source of truth for revenue timing, or createdAt for due
-    // Let's use paidAt for revenue
     const result = await Payment.aggregate([
       { 
         $match: { 
@@ -61,7 +64,9 @@ export async function getAdminStats() {
     totalUsers,
     totalStudents,
     totalTeachers,
+    totalReviews,
     totalRevenue,
+    genderDistribution,
     recentPayments: JSON.parse(JSON.stringify(recentPayments)),
     monthlyRevenue,
   };

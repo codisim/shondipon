@@ -25,7 +25,7 @@ export default async function TeachersPage({
   const userRoles = userRolesHeader ? JSON.parse(userRolesHeader) : [];
   
   const userData = {
-    name: "User",
+    name: "Teacher",
     email: "user@example.com",
     avatar: "",
     roles: userRoles,
