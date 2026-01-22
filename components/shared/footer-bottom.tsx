@@ -5,7 +5,6 @@ import Link from "next/link";
 export function FooterBottom() {
   return (
     <>
-      {/* Footer Bottom */}
       <div
         className="mt-12 pt-8 border-t border-green-900/50 text-sm text-gray-400
                 flex flex-col items-center gap-2
@@ -16,7 +15,7 @@ export function FooterBottom() {
         </p>
 
         <p className="text-center md:text-right">
-          Maintain Team |{" "}
+          Maintain Team |
           <Link
             href="/codisim.com"
             className="hover:text-green-400 transition-colors"
