@@ -24,6 +24,12 @@ export const popularItems = [
     youtubeLink: "https://www.youtube.com/watch?v=UYpU77YqKTQ",
   },
   {
+    title: "ফুল কেন ফোটে",
+    artist: "Maher Zain",
+    image: "https://i.ytimg.com/vi/n0pSo2v0x50/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLABkxXm_86peMkGzby5GkSblsNjWA",
+    youtubeLink: "https://www.youtube.com/watch?v=n0pSo2v0x50",
+  },
+  {
     title: "Right Way | Ramadan Special",
     artist: "Maher Zain",
     image: "https://i.ytimg.com/vi/UYpU77YqKTQ/hqdefault.jpg?sqp=-oaymwEnCNACELwBSFryq4qpAxkIARUAAIhCGAHYAQHiAQoIGBACGAY4AUAB&rs=AOn4CLCqbwVXzhb-zeNKsEiXrJoXl1g-ZA",

@@ -15,7 +15,7 @@ import { categories } from "@/data/categories";
 
 export function FeaturedCategories() {
   return (
-    <section className="py-16 bg-gradient-to-b from-gray-950 to-black">
+    <section className="py-24 bg-gradient-to-b from-white via-cyan-300 to-white">
       <div className="container mx-auto px-4">
         {/* Section Title */}
         <h2 className="text-center text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
