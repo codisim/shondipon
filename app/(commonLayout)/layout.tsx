@@ -1,7 +1,12 @@
+import { Header } from "@/components/shared/header";
+
 export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <>{children}</>;
+  return <>
+  <Header />
+  {children}
+  </>;
 }

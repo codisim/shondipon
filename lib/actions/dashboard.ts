@@ -72,6 +72,86 @@ export async function getAdminStats() {
   };
 }
 
+export async function getSuperAdminStats() {
+  await connectDB();
+
+  // Super Admin sees everything + system health (simulated)
+  const totalUsers = await User.countDocuments({ isDeleted: false });
+  const totalStudents = await User.countDocuments({ roles: "STUDENT", isDeleted: false });
+  const totalTeachers = await User.countDocuments({ roles: "TEACHER", isDeleted: false });
+  const totalAdmins = await User.countDocuments({ roles: "ADMIN", isDeleted: false });
+  
+  const totalRevenueResult = await Payment.aggregate([
+    { $match: { status: "PAID" } },
+    { $group: { _id: null, total: { $sum: "$amount" } } },
+  ]);
+  const totalRevenue = totalRevenueResult[0]?.total || 0;
+
+  // System health or other high-level metrics
+  const recentActivity = await User.find().sort({ updatedAt: -1 }).limit(5).select("email roles updatedAt");
+
+  return {
+    totalUsers,
+    totalStudents,
+    totalTeachers,
+    totalAdmins,
+    totalRevenue,
+    recentActivity: JSON.parse(JSON.stringify(recentActivity)),
+  };
+}
+
+export async function getAccountantStats() {
+  await connectDB();
+
+  const totalRevenueResult = await Payment.aggregate([
+    { $match: { status: "PAID" } },
+    { $group: { _id: null, total: { $sum: "$amount" } } },
+  ]);
+  const totalRevenue = totalRevenueResult[0]?.total || 0;
+
+  const pendingPaymentsCount = await Payment.countDocuments({ status: "PENDING" });
+  
+  // Daily revenue (last 7 days)
+  const dailyRevenue = [];
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    const start = new Date(date.setHours(0, 0, 0, 0));
+    const end = new Date(date.setHours(23, 59, 59, 999));
+
+    const result = await Payment.aggregate([
+      { 
+        $match: { 
+          status: "PAID",
+          paidAt: { $gte: start, $lte: end }
+        } 
+      },
+      { $group: { _id: null, total: { $sum: "$amount" } } },
+    ]);
+
+    dailyRevenue.push({
+      date: format(start, "EEE"),
+      revenue: result[0]?.total || 0,
+    });
+  }
+
+  const recentTransactions = await Payment.find()
+    .sort({ createdAt: -1 })
+    .limit(10)
+    .populate({
+      path: "profile",
+      select: "name email",
+      populate: { path: "user", select: "email" }
+    });
+
+  return {
+    totalRevenue,
+    pendingPaymentsCount,
+    dailyRevenue,
+    recentTransactions: JSON.parse(JSON.stringify(recentTransactions)),
+  };
+}
+
 export async function getTeacherStats(userId: string) {
   await connectDB();
   // Placeholder logic as per plan

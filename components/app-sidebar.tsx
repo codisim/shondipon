@@ -48,6 +48,8 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     roles: [],
   };
 
+  const isSuperAdmin = currentUser.roles.includes("SUPER_ADMIN");
+  const isAccountant = currentUser.roles.includes("ACCOUNTANT");
   const isAdmin = currentUser.roles.includes("ADMIN");
   const isTeacher = currentUser.roles.includes("TEACHER");
   const isStudent = currentUser.roles.includes("STUDENT");
@@ -61,7 +63,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     },
   ];
 
-  if (isAdmin) {
+  if (isSuperAdmin) {
     navMain.push(
       {
         title: "Users",
@@ -69,6 +71,41 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         icon: IconUsers,
         isActive: false,
       },
+      {
+        title: "Students",
+        url: "/dashboard/students",
+        icon: IconSchool,
+        isActive: false,
+      },
+      {
+        title: "Teachers",
+        url: "/dashboard/teachers",
+        icon: IconUser,
+        isActive: false,
+      },
+      {
+        title: "Payments",
+        url: "/dashboard/payments",
+        icon: IconCash,
+        isActive: false,
+      },
+      {
+        title: "Reports",
+        url: "/dashboard/reports",
+        icon: IconChartBar,
+        isActive: false,
+      },
+      {
+        title: "Notices",
+        url: "/dashboard/notices",
+        icon: IconBell,
+        isActive: false,
+      }
+    );
+  }
+
+  if (isAdmin && !isSuperAdmin) {
+    navMain.push(
       {
         title: "Students",
         url: "/dashboard/students",
@@ -96,7 +133,24 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     );
   }
 
-  if (isTeacher && !isAdmin) {
+  if (isAccountant && !isSuperAdmin) {
+    navMain.push(
+      {
+        title: "Payments",
+        url: "/dashboard/payments",
+        icon: IconCash,
+        isActive: false,
+      },
+      {
+        title: "Reports",
+        url: "/dashboard/reports",
+        icon: IconChartBar,
+        isActive: false,
+      }
+    );
+  }
+
+  if (isTeacher && !isSuperAdmin && !isAdmin) {
     navMain.push(
       {
         title: "My Students",
@@ -113,7 +167,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     );
   }
 
-  if (isStudent && !isAdmin && !isTeacher) {
+  if (isStudent && !isSuperAdmin && !isAdmin && !isTeacher) {
     navMain.push(
       {
         title: "My Payments",

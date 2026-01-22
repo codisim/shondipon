@@ -77,6 +77,7 @@ export default async function StudentsPage({
                  <TableRow>
                    <TableHead>Name</TableHead>
                    <TableHead>Email</TableHead>
+                   <TableHead>Role</TableHead>
                    <TableHead>Gender</TableHead>
                    <TableHead>Status</TableHead>
                    <TableHead>Joined</TableHead>
@@ -88,6 +89,7 @@ export default async function StudentsPage({
                    <TableRow key={user._id}>
                      <TableCell className="font-medium">{user.profile?.name || "N/A"}</TableCell>
                      <TableCell>{user.email}</TableCell>
+                    <TableCell>{user?.roles?.join(", ")}</TableCell>
                      <TableCell>{user.profile?.gender || "N/A"}</TableCell>
                      <TableCell>
                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
