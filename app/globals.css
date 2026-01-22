@@ -225,3 +225,37 @@
     @apply !rounded-none !shadow-none;
   }
 }
+
+/* =========  */
+
+@layer base {
+  :root {
+    /* Default theme */
+    --hero-overlay-from: rgba(0, 0, 0, 0.60);
+    --hero-overlay-via:  rgba(0, 0, 0, 0.40);
+    --hero-overlay-to:   rgba(0, 0, 0, 0.70);
+    --hero-bottom-fade:  rgba(0, 0, 0, 0.80);
+  }
+
+  [data-theme="blue"] {
+    --hero-overlay-from: rgba(10, 25, 60, 0.70);
+    --hero-overlay-via:  rgba(20, 50, 100, 0.45);
+    --hero-overlay-to:   rgba(10, 25, 60, 0.80);
+    --hero-bottom-fade:  rgba(10, 25, 60, 0.90);
+  }
+
+  [data-theme="green"] {
+    --hero-overlay-from: rgba(10, 60, 30, 0.70);
+    --hero-overlay-via:  rgba(20, 100, 50, 0.45);
+    --hero-overlay-to:   rgba(10, 60, 30, 0.80);
+    --hero-bottom-fade:  rgba(10, 60, 30, 0.90);
+  }
+
+  [data-theme="amber"] {
+    --hero-overlay-from: rgba(80, 50, 10, 0.70);
+    --hero-overlay-via:  rgba(140, 90, 20, 0.45);
+    --hero-overlay-to:   rgba(80, 50, 10, 0.80);
+    --hero-bottom-fade:  rgba(80, 50, 10, 0.90);
+  }
+
+}
