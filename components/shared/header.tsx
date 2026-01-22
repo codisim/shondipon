@@ -12,8 +12,10 @@ import Link from "next/link";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 max-w-screen-xl items-center px-4">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
+      {/* supports-[backdrop-filter]:bg-background/60 */}
+      <div className="container mx-auto flex h-16 items-center px-4">
+        {/* max-w-screen-xl */}
         {/* Left side: Mobile menu + Logo */}
         <div className="flex items-center">
           {/* Mobile menu */}
@@ -43,7 +45,7 @@ export function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 text-lg font-bold">
             {/* Replace with your actual logo image or text */}
-            <span>Song Edu</span> {/* Placeholder logo text; use <Image> for actual logo */}
+             <span>Shondipon</span> {/* Placeholder logo text; use <Image> for actual logo */}
           </Link>
         </div>
 
