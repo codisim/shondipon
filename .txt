@@ -1,0 +1,68 @@
+Role-Based Dashboard Implementation Plan
+This plan outlines the steps to implement a protected role-based dashboard system with separate routes for Student, Teacher, and Admin roles, and a centralized API service.
+
+Proposed Changes
+Centralized API Service
+[NEW] 
+api.ts
+Create a centralized API utility using fetch to handle all API requests.
+Include methods for GET, POST, PUT, DELETE.
+Handle common headers and error responses.
+Route Protection and Middleware
+[NEW] 
+middleware.ts
+Implement Next.js middleware to protect /dashboard and its sub-routes.
+Verify the JWT token from cookies using jose.
+Set x-user-id and x-user-roles headers for server components.
+Redirect unauthenticated users to /login.
+Role-Based Redirection: If a user accesses /dashboard directly, redirect them to their specific role route (e.g., /dashboard/student).
+Dashboard Layout and Sidebar
+[NEW] 
+layout.tsx
+Create a common layout for all dashboard routes.
+Use SidebarProvider, 
+AppSidebar
+, and SidebarInset.
+Fetch user info from headers and pass it to 
+AppSidebar
+.
+[MODIFY] 
+app-sidebar.tsx
+Ensure the sidebar correctly highlights active routes.
+Update links to point to the new role-specific routes.
+Role-Specific Dashboard Pages
+[MODIFY] 
+page.tsx
+Refactor to handle redirection if not already handled by middleware.
+Possibly keep as a fallback or redirector.
+[NEW] 
+student/page.tsx
+Implement Student-specific dashboard view.
+Show profile, reviews, and previous monthly data.
+[NEW] 
+teacher/page.tsx
+Implement Teacher-specific dashboard view.
+Show profile and notices.
+[NEW] 
+admin/page.tsx
+Implement Admin-specific dashboard view.
+Show student table, CRUD operations, notices, and monthly revenue.
+API Routes
+Ensure existing API routes in app/api are compatible with the new centralized api.ts.
+Verification Plan
+Automated Tests
+N/A (No existing test suite found, will focus on manual verification)
+Manual Verification
+Login and Redirection:
+Log in as a Student -> Verify redirect to /dashboard/student.
+Log in as a Teacher -> Verify redirect to /dashboard/teacher.
+Log in as an Admin -> Verify redirect to /dashboard/admin.
+Route Protection:
+Try to access /dashboard without logging in -> Verify redirect to /login.
+Try to access /dashboard/admin as a Student -> Verify access denied or redirect.
+Dashboard Features:
+Verify Student dashboard shows profile and reviews.
+Verify Teacher dashboard shows notices.
+Verify Admin dashboard shows student table and revenue stats.
+API Service:
+Verify that data fetching in dashboards uses the new lib/api.ts.

@@ -24,12 +24,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
-// This would ideally come from a context or prop, but for now we'll simulate or fetch
-// Since AppSidebar is a client component, we might need to pass data from the layout or page
-// For this refactor, I'll assume we pass user info as props or use a hook if available.
-// However, the existing usage in page.tsx is <AppSidebar variant="inset" /> without props.
-// I will update it to accept user info.
-
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user?: {
     name: string;
@@ -54,14 +48,20 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const isTeacher = currentUser.roles.includes("TEACHER");
   const isStudent = currentUser.roles.includes("STUDENT");
 
-  const navMain = [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: IconDashboard,
-      isActive: true,
-    },
-  ];
+  const navMain = [];
+
+  // Common Dashboard Link based on role
+  let dashboardUrl = "/dashboard";
+  if (isSuperAdmin || isAdmin) dashboardUrl = "/dashboard/admin";
+  else if (isTeacher) dashboardUrl = "/dashboard/teacher";
+  else if (isStudent) dashboardUrl = "/dashboard/student";
+
+  navMain.push({
+    title: "Dashboard",
+    url: dashboardUrl,
+    icon: IconDashboard,
+    isActive: true, // You might want to make this dynamic based on current path
+  });
 
   if (isSuperAdmin) {
     navMain.push(
@@ -193,7 +193,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="/dashboard">
+              <a href={dashboardUrl}>
                 <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">Shondipon</span>
               </a>
@@ -210,3 +210,4 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     </Sidebar>
   )
 }
+
