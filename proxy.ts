@@ -4,12 +4,12 @@ import { jwtVerify } from "jose";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-this";
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;
 
   // Public routes that don't need auth
-  const publicRoutes = ["/login", "/register", "/api/auth/login", "/api/auth/register"];
+  const publicRoutes = ["/", "/login", "/register", "/api/auth/login", "/api/auth/register"];
   
   // Check if the current path is a public route
   if (publicRoutes.some(route => pathname.startsWith(route))) {
